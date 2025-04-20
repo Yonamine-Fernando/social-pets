@@ -40,18 +40,6 @@ inputUpload.addEventListener("change", async (evento) => {
 const inputTag = document.querySelector("#hashtags");
 const listatag = document.querySelector(".tag-list");
 
-inputTag.addEventListener("keypress", async (evento) => {
-    if (evento.key === "Enter") {
-        evento.preventDefault();
-        const tagtexto = inputTag.value.trim();
-        if (await tagtexto !== "") {
-            const newHashTag = document.createElement("li");
-            newHashTag.innerHTML = `<p>${tagtexto} </p> <img src="../src/img/close-black.svg"/class="remove-tag">`;
-            listatag.appendChild(newHashTag);
-            inputTag.value = "";
-        }
-    }
-});
 
 listatag.addEventListener("click", (evento) => {
     if (evento.target.classList.contains("remove-tag")) {
@@ -71,3 +59,26 @@ async function verificarTag(tagtexto) {
         }, 1000);
     });
 }
+
+inputTag.addEventListener("keypress", async (evento) => {
+    if (evento.key === "Enter") {
+        evento.preventDefault();
+        const tagtexto = inputTag.value.trim();
+        if (await tagtexto !== "") {
+            try {
+            const tagExiste = await verificarTag(tagtexto)
+            if(tagExiste){
+            const newHashTag = document.createElement("li");
+            newHashTag.innerHTML = `<p>${tagtexto} </p> <img src="../src/img/close-black.svg"/class="remove-tag">`;
+            listatag.appendChild(newHashTag);
+            inputTag.value = "";
+            }else{
+                alert("Tag não existe, veirificar tag!")
+            }
+        }catch (error){
+            console.error("Erro ao verificar tag")
+            alert("Erro na veficaçao da Tag!")
+        }
+        }
+    }
+});
