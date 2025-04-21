@@ -66,19 +66,45 @@ inputTag.addEventListener("keypress", async (evento) => {
         const tagtexto = inputTag.value.trim();
         if (await tagtexto !== "") {
             try {
-            const tagExiste = await verificarTag(tagtexto)
-            if(tagExiste){
-            const newHashTag = document.createElement("li");
-            newHashTag.innerHTML = `<p>${tagtexto} </p> <img src="../src/img/close-black.svg"/class="remove-tag">`;
-            listatag.appendChild(newHashTag);
-            inputTag.value = "";
-            }else{
-                alert("Tag não existe, veirificar tag!")
+                const tagExiste = await verificarTag(tagtexto);
+                if (tagExiste) {
+                    const newHashTag = document.createElement("li");
+                    newHashTag.innerHTML = `<p>${tagtexto} </p> <img src="../src/img/close-black.svg"/class="remove-tag">`;
+                    listatag.appendChild(newHashTag);
+                    inputTag.value = "";
+                } else {
+                    alert("Tag não existe, veirificar tag!");
+                }
+            } catch (error) {
+                console.error("Erro ao verificar tag");
+                alert("Erro na veficaçao da Tag!");
             }
-        }catch (error){
-            console.error("Erro ao verificar tag")
-            alert("Erro na veficaçao da Tag!")
-        }
         }
     }
 });
+
+const btnPublicar = document.querySelector(".btn-publicar");
+
+btnPublicar.addEventListener("click", async (evento) => {
+    evento.preventDefault();
+    const nomeGato = document.querySelector("#nome").value;
+    const nomeDescricao = document.querySelector("#descricao").value;
+    const listaDeTags = Array.from(listatag.querySelectorAll("p")).map((tag) =>
+        tag.textContent);
+
+    console.log(nomeGato);
+    console.log(nomeDescricao);
+    console.log(listaDeTags);
+});
+
+async function publicarNovoGato(nome, nomeDescricao, listaDeTags) {
+    return new Promise((resolve, reject) => {
+        setTimeout(() => {
+            const deuCerto = Math.random() > 0.5;
+
+            if (deuCerto) {
+                resolve("Deu certo");
+            } else ("Deu errodo");
+        }, 2000);
+    });
+}
