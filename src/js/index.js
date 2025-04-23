@@ -21,7 +21,7 @@ function lerConteudoDoArquivo(arquivo) {
 }
 
 const imagemPrincipal = document.querySelector(".main-imagem");
-const nomeDaImagem = document.querySelector(".containder-nome-img p");
+const nomeDaImagem = document.querySelector(".container-nome-img p");
 
 inputUpload.addEventListener("change", async (evento) => {
     const arquivo = evento.target.files[0];
@@ -30,7 +30,7 @@ inputUpload.addEventListener("change", async (evento) => {
         try {
             const conteudoDoArquivo = await lerConteudoDoArquivo(arquivo);
             imagemPrincipal.src = conteudoDoArquivo.URL;
-            nomeDaImagem = conteudoDoArquivo.nome;
+            nomeDaImagem.textContent = conteudoDoArquivo.nome;
         } catch (error) {
             console.error(`Erro ao subir imagem ${error}`);
         }
@@ -85,18 +85,6 @@ inputTag.addEventListener("keypress", async (evento) => {
 
 const btnPublicar = document.querySelector(".btn-publicar");
 
-btnPublicar.addEventListener("click", async (evento) => {
-    evento.preventDefault();
-    const nomeGato = document.querySelector("#nome").value;
-    const nomeDescricao = document.querySelector("#descricao").value;
-    const listaDeTags = Array.from(listatag.querySelectorAll("p")).map((tag) =>
-        tag.textContent);
-
-    console.log(nomeGato);
-    console.log(nomeDescricao);
-    console.log(listaDeTags);
-});
-
 async function publicarNovoGato(nome, nomeDescricao, listaDeTags) {
     return new Promise((resolve, reject) => {
         setTimeout(() => {
@@ -104,7 +92,42 @@ async function publicarNovoGato(nome, nomeDescricao, listaDeTags) {
 
             if (deuCerto) {
                 resolve("Deu certo");
-            } else ("Deu errodo");
+            } else {
+                reject("Deu erro");
+            }
         }, 2000);
     });
 }
+
+btnPublicar.addEventListener("click", async (evento) => {
+    evento.preventDefault();
+    const nomeGato = document.querySelector("#nome").value;
+    const nomeDescricao = document.querySelector("#descricao").value;
+    const listaDeTags = Array.from(listatag.querySelectorAll("p")).map((tag) =>
+        tag.textContent);
+
+    try {
+        const resultado = await publicarNovoGato(nomeGato, nomeDescricao, listaDeTags);
+        console.log(resultado);
+        alert("Deu certo");
+    } catch (error) {
+        console.log("Deu tudo erro", error.message);
+        alert("Deu errado ❌");
+    }
+
+});
+
+const btnDescartar = document.querySelector(".btn-descartar");
+
+btnDescartar.addEventListener("click", (evento) => {
+    evento.preventDefault();
+
+    const formulario = document.querySelector("form");
+    formulario.reset();
+
+    imagemPrincipal.src = "./src/img/gato.jpeg";
+    nomeDaImagem.textContent = "image_projeto.png";
+    listatag.innerHTML = "";
+})
+
+
